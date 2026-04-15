@@ -1,0 +1,36 @@
+<%- include('../partials/header', { user, title: 'Ticket Confirmed' }) %>
+
+<div style="max-width:520px; margin:0 auto; text-align:center;">
+  <div class="card">
+    <div style="font-size:3rem; margin-bottom:.75rem;">🎟</div>
+    <h1 style="color:#166534; margin-bottom:.5rem;">Reservation Confirmed!</h1>
+    <p class="text-muted" style="margin-bottom:1.5rem;">Your ticket has been reserved successfully.</p>
+
+    <div style="background:#f9fafb; border:1px solid #e5e7eb; border-radius:8px; padding:1.25rem; margin-bottom:1.5rem; text-align:left;">
+      <p class="text-muted" style="margin-bottom:.25rem;">Event</p>
+      <p style="font-weight:600; font-size:1.05rem; margin-bottom:.75rem;"><%= event.title %></p>
+
+      <p class="text-muted" style="margin-bottom:.25rem;">Date &amp; Venue</p>
+      <p style="margin-bottom:.75rem;">
+        <%= new Date(event.date).toLocaleString('en-US', { dateStyle: 'long', timeStyle: 'short' }) %>
+        &nbsp;·&nbsp;
+        <%= event.venue %>
+      </p>
+
+      <p class="text-muted" style="margin-bottom:.25rem;">Ticket Code</p>
+      <p style="font-family:monospace; background:#fff; border:1px solid #d1d5db; border-radius:6px; padding:.5rem .75rem; font-size:.95rem; word-break:break-all;">
+        <%= ticketCode %>
+      </p>
+    </div>
+
+    <% if (qrUrl) { %>
+      <p class="text-muted" style="margin-bottom:.5rem;">Scan at the venue</p>
+      <img src="<%= qrUrl %>" alt="QR code for ticket <%= ticketCode %>"
+           style="width:160px; height:160px; border:4px solid #e5e7eb; border-radius:8px; margin-bottom:1.5rem;" />
+    <% } %>
+
+    <a href="/events" class="btn btn-secondary">Browse More Events</a>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

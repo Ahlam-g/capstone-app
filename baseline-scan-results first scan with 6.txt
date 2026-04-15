@@ -1,0 +1,132 @@
+               
+               
+┌─────────────┐
+│ Scan Status │
+└─────────────┘
+  Scanning 57 files tracked by git with 548 Code rules:
+                                                                                                                        
+  Language      Rules   Files          Origin      Rules                                                                
+ ─────────────────────────────        ───────────────────                                                               
+  <multilang>       5      57          Community     548                                                                
+  js               69      20                                                                                           
+  json              3       3                                                                                           
+                                                                                                                        
+                
+                
+┌──────────────┐
+│ Scan Summary │
+└──────────────┘
+✅ Scan completed successfully.
+ • Findings: 6 (6 blocking)
+ • Rules run: 77
+ • Targets scanned: 57
+ • Parsed lines: ~100.0%
+ • Scan skipped: 
+   ◦ Files matching .semgrepignore patterns: 160
+ • For a detailed list of skipped files and lines, run semgrep with the --verbose flag
+Ran 77 rules on 57 files: 6 findings.
+
+A new version of Semgrep is available. See https://semgrep.dev/docs/upgrading
+                   
+                   
+┌─────────────────┐
+│ 6 Code Findings │
+└─────────────────┘
+          
+    app.js
+    ❯❱ javascript.express.security.audit.express-cookie-settings.express-cookie-session-default-name
+          ❰❰ Blocking ❱❱
+          Don’t use the default session cookie name Using the default session cookie name can open your app to
+          attacks. The security issue posed is similar to X-Powered-By: a potential attacker can use it to    
+          fingerprint the server and target attacks accordingly.                                              
+          Details: https://sg.run/1Z5x                                                                        
+                                                                                                              
+           69┆ session({
+           70┆   secret: process.env.SESSION_SECRET || 'ticketing-app-secret',
+           71┆   resave: false,
+           72┆   saveUninitialized: false,
+           73┆   cookie: {
+           74┆     secure: process.env.NODE_ENV === 'production',
+           75┆     httpOnly: true,
+           76┆     maxAge: 24 * 60 * 60 * 1000, // 24 hours
+           77┆   },
+           78┆ })
+   
+    ❯❱ javascript.express.security.audit.express-cookie-settings.express-cookie-session-no-domain
+          ❰❰ Blocking ❱❱
+          Default session middleware settings: `domain` not set. It indicates the domain of the cookie; use it
+          to compare against the domain of the server in which the URL is being requested. If they match, then
+          check the path attribute next.                                                                      
+          Details: https://sg.run/rd41                                                                        
+                                                                                                              
+           69┆ session({
+           70┆   secret: process.env.SESSION_SECRET || 'ticketing-app-secret',
+           71┆   resave: false,
+           72┆   saveUninitialized: false,
+           73┆   cookie: {
+           74┆     secure: process.env.NODE_ENV === 'production',
+           75┆     httpOnly: true,
+           76┆     maxAge: 24 * 60 * 60 * 1000, // 24 hours
+           77┆   },
+           78┆ })
+   
+    ❯❱ javascript.express.security.audit.express-cookie-settings.express-cookie-session-no-expires
+          ❰❰ Blocking ❱❱
+          Default session middleware settings: `expires` not set. Use it to set expiration date for persistent
+          cookies.                                                                                            
+          Details: https://sg.run/N4eG                                                                        
+                                                                                                              
+           69┆ session({
+           70┆   secret: process.env.SESSION_SECRET || 'ticketing-app-secret',
+           71┆   resave: false,
+           72┆   saveUninitialized: false,
+           73┆   cookie: {
+           74┆     secure: process.env.NODE_ENV === 'production',
+           75┆     httpOnly: true,
+           76┆     maxAge: 24 * 60 * 60 * 1000, // 24 hours
+           77┆   },
+           78┆ })
+   
+    ❯❱ javascript.express.security.audit.express-cookie-settings.express-cookie-session-no-path
+          ❰❰ Blocking ❱❱
+          Default session middleware settings: `path` not set. It indicates the path of the cookie; use it to
+          compare against the request path. If this and domain match, then send the cookie in the request.   
+          Details: https://sg.run/b7pd                                                                       
+                                                                                                             
+           69┆ session({
+           70┆   secret: process.env.SESSION_SECRET || 'ticketing-app-secret',
+           71┆   resave: false,
+           72┆   saveUninitialized: false,
+           73┆   cookie: {
+           74┆     secure: process.env.NODE_ENV === 'production',
+           75┆     httpOnly: true,
+           76┆     maxAge: 24 * 60 * 60 * 1000, // 24 hours
+           77┆   },
+           78┆ })
+   
+    ❯❱ javascript.express.security.audit.express-cookie-settings.express-cookie-session-no-secure
+          ❰❰ Blocking ❱❱
+          Default session middleware settings: `secure` not set. It ensures the browser only sends the cookie
+          over HTTPS.                                                                                        
+          Details: https://sg.run/9oKz                                                                       
+                                                                                                             
+           69┆ session({
+           70┆   secret: process.env.SESSION_SECRET || 'ticketing-app-secret',
+           71┆   resave: false,
+           72┆   saveUninitialized: false,
+           73┆   cookie: {
+           74┆     secure: process.env.NODE_ENV === 'production',
+           75┆     httpOnly: true,
+           76┆     maxAge: 24 * 60 * 60 * 1000, // 24 hours
+           77┆   },
+           78┆ })
+                                  
+    controllers\eventController.js
+    ❯❱ javascript.express.security.audit.express-path-join-resolve-traversal.express-path-join-resolve-traversal
+          ❰❰ Blocking ❱❱
+          Possible writing outside of the destination, make sure that the target path is nested in the
+          intended destination                                                                        
+          Details: https://sg.run/weRn                                                                
+                                                                                                      
+           64┆ const qrFilePath = path.join(__dirname, '../public/qrcodes', qrFilename);
+

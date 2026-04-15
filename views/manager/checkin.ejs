@@ -1,0 +1,59 @@
+<%- include('../partials/header', { user, title: 'Ticket Check-in' }) %>
+
+<div style="max-width:560px; margin:0 auto;">
+  <div class="flex items-center justify-between" style="margin-bottom:1.5rem;">
+    <h1 style="margin:0;">Ticket Check-in</h1>
+    <a href="/manager" class="btn btn-secondary btn-sm">← Dashboard</a>
+  </div>
+
+  <div class="card" style="margin-bottom:1.5rem;">
+    <form method="POST" action="/manager/checkin">
+      <div class="form-group" style="margin-bottom:.75rem;">
+        <label for="ticket_code">Ticket Code</label>
+        <input type="text" id="ticket_code" name="ticket_code"
+               placeholder="Enter the full ticket UUID…"
+               value="<%= code %>"
+               style="font-family:monospace;" required autofocus />
+      </div>
+      <button type="submit" class="btn btn-primary">Check In</button>
+    </form>
+  </div>
+
+  <% if (error) { %>
+    <div class="alert alert-error"><%= error %></div>
+  <% } %>
+
+  <% if (result) { %>
+    <div class="card" style="border:2px solid #86efac;">
+      <div style="display:flex; align-items:center; gap:.75rem; margin-bottom:1.25rem;">
+        <span style="font-size:2rem;">✓</span>
+        <div>
+          <p style="font-weight:700; color:#166534; font-size:1.1rem; margin-bottom:.1rem;">Checked In Successfully</p>
+          <p class="text-muted" style="font-size:.875rem;">
+            <%= new Date(result.checked_in_at).toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' }) %>
+          </p>
+        </div>
+      </div>
+      <table style="width:100%;">
+        <tr>
+          <td style="padding:.35rem 0; color:#6b7280; width:100px;">Attendee</td>
+          <td style="padding:.35rem 0; font-weight:600;"><%= result.user_name || result.user_email %></td>
+        </tr>
+        <tr>
+          <td style="padding:.35rem 0; color:#6b7280;">Email</td>
+          <td style="padding:.35rem 0;"><%= result.user_email %></td>
+        </tr>
+        <tr>
+          <td style="padding:.35rem 0; color:#6b7280;">Event</td>
+          <td style="padding:.35rem 0;"><%= result.event_title %></td>
+        </tr>
+        <tr>
+          <td style="padding:.35rem 0; color:#6b7280;">Ticket Code</td>
+          <td style="padding:.35rem 0; font-family:monospace; font-size:.85rem;"><%= result.ticket_code %></td>
+        </tr>
+      </table>
+    </div>
+  <% } %>
+</div>
+
+<%- include('../partials/footer') %>

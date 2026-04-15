@@ -1,0 +1,71 @@
+<%- include('../partials/header', { user, title: 'My Tickets' }) %>
+
+<div class="flex items-center justify-between" style="margin-bottom:1.5rem;">
+  <h1 style="margin:0;">My Tickets (<%= tickets.length %>)</h1>
+  <a href="/profile" class="btn btn-secondary btn-sm">← Profile</a>
+</div>
+
+<% if (error) { %><div class="alert alert-error"><%= error %></div><% } %>
+<% if (success) { %><div class="alert alert-success"><%= success %></div><% } %>
+
+<% if (tickets.length === 0) { %>
+  <div class="card" style="text-align:center; padding:3rem;">
+    <p class="text-muted">You haven't reserved any tickets yet.</p>
+    <a href="/events" class="btn btn-primary" style="margin-top:1rem;">Browse Events</a>
+  </div>
+<% } else { %>
+  <div class="card" style="padding:0; overflow:hidden;">
+    <table>
+      <thead>
+        <tr>
+          <th>Event</th>
+          <th>Date</th>
+          <th>Venue</th>
+          <th>Ticket Code</th>
+          <th>Status</th>
+          <th>Cancel</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% tickets.forEach(t => { %>
+          <tr>
+            <td><strong><%= t.event_title %></strong></td>
+            <td><%= new Date(t.event_date).toLocaleDateString('en-US', { dateStyle: 'medium' }) %></td>
+            <td><%= t.event_venue %></td>
+            <td>
+              <a href="/profile/tickets/<%= t.id %>"
+                 style="font-family:monospace; font-size:.8rem; color:#6366f1; text-decoration:none;"
+                 title="View ticket details">
+                <%= t.ticket_code.substring(0, 8) %>…
+              </a>
+            </td>
+            <td>
+              <% if (t.checked_in) { %>
+                <span style="font-size:.8rem; font-weight:600; padding:.2rem .5rem; border-radius:999px;
+                  background:#eff6ff; color:#1d4ed8;">checked in</span>
+              <% } else { %>
+                <span style="font-size:.8rem; font-weight:600; padding:.2rem .5rem; border-radius:999px;
+                  background:<%= t.status === 'reserved' ? '#f0fdf4' : '#fef2f2' %>;
+                  color:<%= t.status === 'reserved' ? '#166534' : '#b91c1c' %>;">
+                  <%= t.status %>
+                </span>
+              <% } %>
+            </td>
+            <td>
+              <% if (t.status === 'reserved' && !t.checked_in) { %>
+                <form method="POST" action="/profile/tickets/<%= t.id %>/cancel"
+                      onsubmit="return confirm('Cancel your ticket for <%= t.event_title.replace(/'/g, '\\\'') %>?')">
+                  <button type="submit" class="btn btn-danger btn-sm">Cancel</button>
+                </form>
+              <% } else { %>
+                <span class="text-muted">—</span>
+              <% } %>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+<% } %>
+
+<%- include('../partials/footer') %>

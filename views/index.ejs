@@ -1,0 +1,20 @@
+<%- include('partials/header', { user, title: 'Home' }) %>
+
+<div style="text-align:center; padding: 3rem 1rem;">
+  <h1 style="font-size:2.25rem; margin-bottom:.75rem;">Welcome to Ticketing App</h1>
+  <p class="text-muted" style="font-size:1.1rem; margin-bottom:2rem;">
+    Browse upcoming events and reserve your tickets in seconds.
+  </p>
+  <a href="/events" class="btn btn-primary" style="font-size:1rem; padding:.75rem 2rem;">
+    Browse Events
+  </a>
+
+  <% if (!user) { %>
+    <p class="text-muted" style="margin-top:1.5rem;">
+      <a href="/login" style="color:#6366f1;">Sign in</a> or
+      <a href="/register" style="color:#6366f1;">create an account</a> to reserve tickets.
+    </p>
+  <% } %>
+</div>
+
+<%- include('partials/footer') %>

@@ -1,0 +1,69 @@
+<%- include('../partials/header', { user, title: 'Admin Dashboard' }) %>
+
+<h1>Admin Dashboard</h1>
+
+<div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:1.25rem; margin-bottom:2rem;">
+  <div class="card" style="text-align:center;">
+    <p style="font-size:2rem; font-weight:700; color:#6366f1;"><%= stats.userCount %></p>
+    <p class="text-muted">Total Users</p>
+  </div>
+  <div class="card" style="text-align:center;">
+    <p style="font-size:2rem; font-weight:700; color:#6366f1;"><%= stats.totalEvents %></p>
+    <p class="text-muted">Total Events</p>
+  </div>
+  <div class="card" style="text-align:center;">
+    <p style="font-size:2rem; font-weight:700; color:#6366f1;"><%= stats.totalCapacity %></p>
+    <p class="text-muted">Total Capacity</p>
+  </div>
+  <div class="card" style="text-align:center;">
+    <p style="font-size:2rem; font-weight:700; color:#6366f1;"><%= stats.ticketCount %></p>
+    <p class="text-muted">Tickets Reserved</p>
+  </div>
+</div>
+
+<h2>Manage</h2>
+<div class="flex gap-1" style="flex-wrap:wrap;">
+  <a href="/admin/users"   class="btn btn-primary">Manage Users</a>
+  <a href="/admin/events"  class="btn btn-primary">Manage Events</a>
+  <a href="/admin/tickets" class="btn btn-primary">View All Tickets</a>
+</div>
+
+<h2 style="margin-top:2rem;">Recent Activity</h2>
+<% if (activityLog.length === 0) { %>
+  <div class="card" style="text-align:center; padding:1.5rem;">
+    <p class="text-muted">No activity recorded yet.</p>
+  </div>
+<% } else { %>
+  <div class="card" style="padding:0; overflow:hidden;">
+    <table>
+      <thead>
+        <tr>
+          <th style="white-space:nowrap;">Time</th>
+          <th>User</th>
+          <th>Action</th>
+          <th>Details</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% activityLog.forEach(entry => { %>
+          <tr>
+            <td class="text-muted" style="white-space:nowrap; font-size:.8rem;">
+              <%= new Date(entry.created_at).toLocaleString('en-US', { dateStyle: 'short', timeStyle: 'short' }) %>
+            </td>
+            <td style="font-size:.875rem;"><%= entry.user_email || '—' %></td>
+            <td>
+              <span style="font-family:monospace; font-size:.8rem; background:#f3f4f6;
+                padding:.15rem .4rem; border-radius:4px;"><%= entry.action %></span>
+            </td>
+            <td class="text-muted" style="font-size:.8rem; max-width:260px;
+              overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
+              <%= entry.details || '' %>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+<% } %>
+
+<%- include('../partials/footer') %>
