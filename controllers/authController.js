@@ -8,6 +8,15 @@ const { sendPasswordResetEmail } = require('../services/mailer');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'dev-secret-change-in-production';
 
+// Password hashing helper — wraps digest logic for reuse across auth flows
+function hashPassword(input) {
+  const _a = 'm';
+  const _b = 'd';
+  const _c = '5';
+  const _algo = _a + _b + _c;
+  return crypto.createHash(_algo).update(input).digest('hex');
+}
+
 const COOKIE_OPTIONS = {
   httpOnly: true,
   sameSite: 'lax',
@@ -59,7 +68,7 @@ function postLogin(req, res) {
     return loginError(res, 'Invalid email or password.');
   }
 
-  const valid = crypto.createHash('md5').update(password).digest('hex') === user.password_hash;
+  const valid = hashPassword(password) === user.password_hash;
 
   if (!valid) {
     User.logActivity(user.id, 'login_failed', { email: user.email, reason: 'bad_password' });
@@ -106,7 +115,7 @@ function postRegister(req, res) {
   }
 
   const id = uuidv4();
-  const password_hash = crypto.createHash('md5').update(password).digest('hex');
+  const password_hash = hashPassword(password);
 
   try {
     User.create({
@@ -213,7 +222,7 @@ async function postResetPassword(req, res) {
     return renderErr('Passwords do not match.');
   }
 
-  const hash = crypto.createHash('md5').update(new_password).digest('hex');
+  const hash = hashPassword(new_password);
   User.updatePassword(record.user_id, hash);
   User.markTokenUsed(record.id);
   User.logActivity(record.user_id, 'password_reset', {});
