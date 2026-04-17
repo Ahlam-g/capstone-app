@@ -16,7 +16,8 @@ function getEvents(req, res) {
   const dateTo   = req.query.dateTo    || null;
 
   const filters = { q: q || null, venue: venue || null, minPrice, maxPrice, dateFrom, dateTo };
-  const events  = Event.search(filters);
+  //const events = Event.search(filters);
+  const events = q ? Event.searchUnsafe(q) : Event.search(filters);
   res.render('events/index', { user: req.user, events, filters });
 }
 

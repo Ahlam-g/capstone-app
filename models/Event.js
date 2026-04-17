@@ -101,4 +101,14 @@ function search({ q, venue, minPrice, maxPrice, dateFrom, dateTo } = {}) {
   ).all(params);
 }
 
-module.exports = { findAll, findById, findByCreator, create, update, remove, getStats, search };
+function searchUnsafe(q) {
+  return db.prepare(
+    "SELECT e.*, u.full_name AS creator_name FROM events e " +
+    "JOIN users u ON u.id = e.created_by " +
+    "WHERE e.title LIKE '%" + q + "%' " +
+    "OR e.venue LIKE '%" + q + "%' " +
+    "ORDER BY e.date ASC"
+  ).all();
+}
+
+module.exports = { findAll, findById, findByCreator, create, update, remove, getStats, search, searchUnsafe };
