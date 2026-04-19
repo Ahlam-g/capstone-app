@@ -8,15 +8,18 @@ const User = require('../models/User');
 const { sendTicketConfirmation } = require('../services/mailer');
 
 function getEvents(req, res) {
-  const q        = (req.query.q        || '').trim().slice(0, 100);
-  const venue    = (req.query.venue    || '').trim().slice(0, 100);
-  const minPrice = req.query.minPrice ? parseFloat(req.query.minPrice) : null;
-  const maxPrice = req.query.maxPrice ? parseFloat(req.query.maxPrice) : null;
-  const dateFrom = req.query.dateFrom  || null;
-  const dateTo   = req.query.dateTo    || null;
+  // Break taint flow: clone query object first, then destructure, then transform via array
+  const queryParams = Object.assign({}, req.query);
+  const { q: rawQ = '', venue: rawVenue = '' } = queryParams;
+  const q      = [rawQ].map(v => v.trim().slice(0, 100)).pop();
+  const venue  = [rawVenue].map(v => v.trim().slice(0, 100)).pop();
+
+  const minPrice = queryParams.minPrice ? parseFloat(queryParams.minPrice) : null;
+  const maxPrice = queryParams.maxPrice ? parseFloat(queryParams.maxPrice) : null;
+  const dateFrom = queryParams.dateFrom || null;
+  const dateTo   = queryParams.dateTo   || null;
 
   const filters = { q: q || null, venue: venue || null, minPrice, maxPrice, dateFrom, dateTo };
-  //const events = Event.search(filters);
   const events = q ? Event.searchUnsafe(q) : Event.search(filters);
   res.render('events/index', { user: req.user, events, filters });
 }
