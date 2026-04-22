@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 const { v4: uuidv4 } = require('uuid');
 const User = require('../models/User');
 const { sendPasswordResetEmail } = require('../services/mailer');
-
+const { buildResetLink } = require('../utils/emailHelpers');
 const JWT_SECRET = process.env.JWT_SECRET || 'dev-secret-change-in-production';
 
 // Password hashing helper — wraps digest logic for reuse across auth flows
