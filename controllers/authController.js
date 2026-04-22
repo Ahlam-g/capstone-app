@@ -174,8 +174,9 @@ async function postForgotPassword(req, res) {
     const expiresAt = new Date(Date.now() + 3600 * 1000).toISOString();
     User.createResetToken(user.id, token, expiresAt);
 
-    const host = req.protocol + '://' + req.get('host');
-    const resetLink = host + '/reset/' + token;
+    //const host = req.protocol + '://' + req.get('host');
+    //const resetLink = host + '/reset/' + token;
+    const resetLink = buildResetLink(req, token);
 
     try {
       await sendPasswordResetEmail({ to: user.email, fullName: user.full_name || user.email, resetLink });
