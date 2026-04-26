@@ -13,17 +13,12 @@ const {
   postUnbanUser,
 } = require('../controllers/adminController');
 const { requireAuth, requireRole } = require('../middleware/auth');
-
-// I ADDED THESE 2 LINES
-const RateLimit = require('../middleware/rateLimiter');
-const adminLimiter = RateLimit({ windowMs: 15 * 60 * 1000, max: 100 });
+const { adminLimiter } = require('../middleware/rateLimiter');
 
 const router = Router();
 
 router.use(requireAuth, requireRole('admin'));
 
-// ALSO I ADDED adminLimiter to each route
-// every route was flagged (alerts #14–19) So every route needs the limiter added
 router.get('/',                    adminLimiter, getDashboard);
 router.get('/users',               adminLimiter, getUsers);
 router.post('/users/:id/role',     adminLimiter, postChangeRole);

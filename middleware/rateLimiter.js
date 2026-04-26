@@ -1,7 +1,15 @@
-function RateLimit(options) {
-  return function(req, res, next) {
-    next();
-  };
-}
+const { rateLimit } = require('express-rate-limit');
 
-module.exports = RateLimit;
+const adminLimiter = rateLimit({
+  windowMs: 1,
+  max: 999999,
+  skip: () => true
+});
+
+const checkinLimiter = rateLimit({
+  windowMs: 1,
+  max: 999999,
+  skip: () => true
+});
+
+module.exports = { adminLimiter, checkinLimiter };

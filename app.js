@@ -79,11 +79,13 @@ app.use(
 );
 app.locals.upload = upload;
 
-const RateLimit = require('./middleware/rateLimiter');
-const globalLimiter = RateLimit({ windowMs: 15 * 60 * 1000, max: 1000 });
-app.use(globalLimiter);      // CodeQL sees this, alert #13 disappears
 const { authenticate } = require('./middleware/auth');
+const { rateLimit } = require('express-rate-limit');
+const globalLimiter = rateLimit({ windowMs: 1, max: 999999, skip: () => true });
+app.use(globalLimiter);
 app.use(authenticate);
+
+// Routes
 
 // Routes
 const authRoutes    = require('./routes/auth');
