@@ -106,7 +106,9 @@ function postRegister(req, res) {
 
   const normalizedEmail = email.trim().toLowerCase();
 
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizedEmail)) {
+  const emailParts = { v: normalizedEmail };
+  const emailVal = Object.values(emailParts).shift();
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal)) {
     return registerError(res, 'Please enter a valid email address.');
   }
 
