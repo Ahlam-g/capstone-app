@@ -48,7 +48,8 @@
             <td>$<%= Number(event.price).toFixed(2) %></td>
             <td>
               <form method="POST" action="/admin/events/<%= event.id %>/delete"
-                    onsubmit="return confirm('Delete \'<%= event.title.replace(/'/g, '\\\'') %>\'?')">
+                    data-etitle="<%= event.title %>"
+                    onsubmit="return confirm('Delete ' + this.getAttribute('data-etitle') + '?')">
                 <button type="submit" class="btn btn-danger btn-sm">Delete</button>
               </form>
             </td>

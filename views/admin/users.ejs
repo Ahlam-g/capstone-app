@@ -57,7 +57,8 @@
           <td>
             <% if (u.id !== user.id) { %>
               <form method="POST" action="/admin/users/<%= u.id %>/delete"
-                    onsubmit="return confirm('Delete user <%= u.email.replace(/'/g, '\\\'') %>? All their data will be removed.')">
+                    data-uemail="<%= u.email %>"
+                    onsubmit="return confirm('Delete user ' + this.getAttribute('data-uemail') + '? All their data will be removed.')">
                 <button type="submit" class="btn btn-danger btn-sm">Delete</button>
               </form>
             <% } else { %>
@@ -72,7 +73,8 @@
                 </form>
               <% } else { %>
                 <form method="POST" action="/admin/users/<%= u.id %>/ban"
-                      onsubmit="return confirm('Ban <%= u.email.replace(/'/g, '\\\'') %>? They will be locked out immediately.')">
+                      data-uemail="<%= u.email %>"
+                      onsubmit="return confirm('Ban ' + this.getAttribute('data-uemail') + '? They will be locked out immediately.')">
                   <button type="submit" class="btn btn-danger btn-sm">Ban</button>
                 </form>
               <% } %>

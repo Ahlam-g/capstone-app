@@ -51,7 +51,8 @@
               <div class="flex gap-1">
                 <a href="/manager/events/<%= event.id %>/edit" class="btn btn-secondary btn-sm">Edit</a>
                 <form method="POST" action="/manager/events/<%= event.id %>/delete"
-                      onsubmit="return confirm('Delete \'<%= event.title.replace(/'/g, '\\\'') %>\'? This cannot be undone.')">
+                      data-etitle="<%= event.title %>"
+                      onsubmit="return confirm('Delete ' + this.getAttribute('data-etitle') + '? This cannot be undone.')">
                   <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                 </form>
               </div>

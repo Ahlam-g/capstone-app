@@ -62,7 +62,8 @@
   <!-- Cancel button -->
   <% if (ticket.status === 'reserved' && !ticket.checked_in) { %>
     <form method="POST" action="/profile/tickets/<%= ticket.id %>/cancel"
-          onsubmit="return confirm('Cancel your ticket for <%= ticket.event_title.replace(/'/g, '\\\'') %>?')">
+          data-etitle="<%= ticket.event_title %>"
+          onsubmit="return confirm('Cancel your ticket for ' + this.getAttribute('data-etitle') + '?')">
       <button type="submit" class="btn btn-danger">Cancel Ticket</button>
     </form>
   <% } %>
