@@ -1,0 +1,54 @@
+<%- include('../partials/header', { user, title: 'All Tickets' }) %>
+
+<div class="flex items-center justify-between" style="margin-bottom:1.5rem;">
+  <h1 style="margin:0;">All Ticket Reservations (<%= tickets.length %>)</h1>
+  <a href="/admin" class="btn btn-secondary btn-sm">← Dashboard</a>
+</div>
+
+<% if (tickets.length === 0) { %>
+  <div class="card" style="text-align:center; padding:2rem;">
+    <p class="text-muted">No tickets have been reserved yet.</p>
+  </div>
+<% } else { %>
+  <div class="card" style="padding:0; overflow:hidden;">
+    <table>
+      <thead>
+        <tr>
+          <th>Ticket Code</th>
+          <th>User</th>
+          <th>Event</th>
+          <th>Status</th>
+          <th>Reserved At</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% tickets.forEach(ticket => { %>
+          <tr>
+            <td>
+              <span style="font-family:monospace; font-size:.8rem; color:#374151;">
+                <%= ticket.ticket_code.substring(0, 8) %>…
+              </span>
+            </td>
+            <td>
+              <span><%= ticket.user_name %></span><br>
+              <span class="text-muted"><%= ticket.user_email %></span>
+            </td>
+            <td><%= ticket.event_title %></td>
+            <td>
+              <span style="font-size:.8rem; font-weight:600; padding:.2rem .5rem; border-radius:999px;
+                background:<%= ticket.status==='reserved' ? '#f0fdf4' : '#fef2f2' %>;
+                color:<%= ticket.status==='reserved' ? '#166534' : '#b91c1c' %>;">
+                <%= ticket.status %>
+              </span>
+            </td>
+            <td class="text-muted">
+              <%= new Date(ticket.created_at).toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' }) %>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+<% } %>
+
+<%- include('../partials/footer') %>

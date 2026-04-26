@@ -1,0 +1,94 @@
+<%- include('../partials/header', { user, title: event.title }) %>
+
+<div style="max-width:720px; margin:0 auto;">
+  <a href="/events" class="text-muted" style="display:inline-block; margin-bottom:1rem;">← All Events</a>
+
+  <% if (error) { %>
+    <div class="alert alert-error"><%= error %></div>
+  <% } %>
+
+  <div class="card" style="padding:0; overflow:hidden;">
+    <% if (event.image_path) { %>
+      <img src="<%= event.image_path %>" alt="<%= event.title %>"
+           id="event-banner"
+           style="width:100%; max-height:320px; object-fit:contain; cursor:zoom-in;" />
+
+      <div id="lightbox"
+           style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85);
+                  z-index:1000; align-items:center; justify-content:center; cursor:zoom-out;">
+        <img src="<%= event.image_path %>" alt="<%= event.title %>"
+             style="max-width:90vw; max-height:90vh; object-fit:contain;
+                    border-radius:4px; box-shadow:0 8px 32px rgba(0,0,0,0.6);" />
+      </div>
+
+      <script>
+        (function () {
+          var banner   = document.getElementById('event-banner');
+          var lightbox = document.getElementById('lightbox');
+
+          function open()  { lightbox.style.display = 'flex'; }
+          function close() { lightbox.style.display = 'none'; }
+
+          banner.addEventListener('click', open);
+          lightbox.addEventListener('click', close);
+
+          document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') close();
+          });
+        })();
+      </script>
+    <% } %>
+
+    <div style="padding:1.75rem;">
+      <h1 style="margin-bottom:.5rem;"><%= event.title %></h1>
+      <p class="text-muted" style="margin-bottom:1.25rem;">
+        By <%= event.creator_name %>
+      </p>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:.75rem; margin-bottom:1.5rem;">
+        <div>
+          <span class="text-muted">Date &amp; Time</span><br>
+          <strong><%= new Date(event.date).toLocaleString('en-US', { dateStyle: 'long', timeStyle: 'short' }) %></strong>
+        </div>
+        <div>
+          <span class="text-muted">Venue</span><br>
+          <strong><%= event.venue %></strong>
+        </div>
+        <div>
+          <span class="text-muted">Price</span><br>
+          <strong>$<%= Number(event.price).toFixed(2) %></strong>
+        </div>
+        <div>
+          <span class="text-muted">Availability</span><br>
+          <% if (event.tickets_remaining > 0) { %>
+            <strong style="color:#166534;"><%= event.tickets_remaining %> / <%= event.total_tickets %> tickets remaining</strong>
+          <% } else { %>
+            <strong style="color:#b91c1c;">Sold Out</strong>
+          <% } %>
+        </div>
+      </div>
+
+      <% if (event.description) { %>
+        <p style="line-height:1.65; margin-bottom:1.5rem; color:#374151;"><%= event.description %></p>
+      <% } %>
+
+      <hr style="border:none; border-top:1px solid #e5e7eb; margin-bottom:1.5rem;" />
+
+      <% if (!user) { %>
+        <a href="/login" class="btn btn-primary">Sign in to Reserve a Ticket</a>
+      <% } else if (alreadyReserved) { %>
+        <p style="color:#166534; font-weight:600;">✓ You already have a ticket for this event.</p>
+      <% } else if (event.tickets_remaining <= 0) { %>
+        <p style="color:#b91c1c; font-weight:600;">This event is sold out.</p>
+      <% } else { %>
+        <form method="POST" action="/events/<%= event.id %>/reserve">
+          <button type="submit" class="btn btn-primary">
+            Reserve a Ticket — $<%= Number(event.price).toFixed(2) %>
+          </button>
+        </form>
+      <% } %>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

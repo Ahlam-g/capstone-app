@@ -1,0 +1,32 @@
+{
+  "name": "ticketing-app",
+  "version": "1.0.0",
+  "description": "Node.js + Express ticketing application",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js",
+    "db:seed": "node database/seed.js"
+  },
+  "keywords": [
+    "ticketing",
+    "express",
+    "nodejs"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "better-sqlite3": "^12.8.0",
+    "cookie-parser": "^1.4.7",
+    "dotenv": "^17.4.2",
+    "ejs": "^5.0.1",
+    "express": "^5.2.1",
+    "express-session": "^1.19.0",
+    "jsonwebtoken": "^9.0.3",
+    "multer": "^2.1.1",
+    "nodemailer": "^8.0.4",
+    "qrcode": "^1.5.4",
+    "uuid": "^13.0.0"
+  }
+}

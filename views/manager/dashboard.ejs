@@ -1,0 +1,66 @@
+<%- include('../partials/header', { user, title: 'Manager Dashboard' }) %>
+
+<div class="flex items-center justify-between" style="margin-bottom:1.5rem;">
+  <h1 style="margin:0;">My Events</h1>
+  <div style="display:flex; gap:.5rem;">
+    <a href="/manager/checkin" class="btn btn-secondary">Check In Tickets</a>
+    <a href="/manager/events/new" class="btn btn-primary">+ New Event</a>
+  </div>
+</div>
+
+<% if (error) { %><div class="alert alert-error"><%= error %></div><% } %>
+<% if (success) { %><div class="alert alert-success"><%= success %></div><% } %>
+
+<% if (events.length === 0) { %>
+  <div class="card" style="text-align:center; padding:3rem;">
+    <p class="text-muted">You haven't created any events yet.</p>
+    <a href="/manager/events/new" class="btn btn-primary" style="margin-top:1rem;">Create your first event</a>
+  </div>
+<% } else { %>
+  <div class="card" style="padding:0; overflow:hidden;">
+    <table>
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Date</th>
+          <th>Venue</th>
+          <th>Total</th>
+          <th>Reserved</th>
+          <th>Remaining</th>
+          <th>Price</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% events.forEach(event => { %>
+          <tr>
+            <td><strong><%= event.title %></strong></td>
+            <td><%= new Date(event.date).toLocaleDateString('en-US', { dateStyle: 'medium' }) %></td>
+            <td><%= event.venue %></td>
+            <td><%= event.total_tickets %></td>
+            <td><%= event.reserved_count %></td>
+            <td>
+              <% if (event.tickets_remaining > 0) { %>
+                <span style="color:#166534;"><%= event.tickets_remaining %></span>
+              <% } else { %>
+                <span style="color:#b91c1c;">0</span>
+              <% } %>
+            </td>
+            <td>$<%= Number(event.price).toFixed(2) %></td>
+            <td>
+              <div class="flex gap-1">
+                <a href="/manager/events/<%= event.id %>/edit" class="btn btn-secondary btn-sm">Edit</a>
+                <form method="POST" action="/manager/events/<%= event.id %>/delete"
+                      onsubmit="return confirm('Delete \'<%= event.title.replace(/'/g, '\\\'') %>\'? This cannot be undone.')">
+                  <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                </form>
+              </div>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+<% } %>
+
+<%- include('../partials/footer') %>

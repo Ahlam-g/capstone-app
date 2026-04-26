@@ -1,0 +1,50 @@
+<%- include('../partials/header', { user, title: 'My Profile' }) %>
+
+<div style="max-width:600px; margin:0 auto;">
+  <div class="flex items-center justify-between" style="margin-bottom:1.5rem;">
+    <h1 style="margin:0;">My Profile</h1>
+    <div style="display:flex; gap:.5rem;">
+      <a href="/profile/edit" class="btn btn-primary btn-sm">Edit Profile</a>
+      <a href="/profile/password" class="btn btn-secondary btn-sm">Change Password</a>
+    </div>
+  </div>
+
+  <% if (success) { %>
+    <div class="alert alert-success"><%= success %></div>
+  <% } %>
+
+  <div class="card">
+    <div style="display:flex; align-items:center; gap:1.5rem; margin-bottom:1.5rem;">
+      <% if (profile.profile_picture) { %>
+        <img src="<%= profile.profile_picture %>" alt="Profile picture"
+             style="width:80px; height:80px; border-radius:50%; object-fit:cover; border:2px solid #e5e7eb;" />
+      <% } else { %>
+        <div style="width:80px; height:80px; border-radius:50%; background:#e0e7ff; display:flex;
+                    align-items:center; justify-content:center; font-size:2rem; color:#6366f1; flex-shrink:0;">
+          &#x1F464;
+        </div>
+      <% } %>
+      <div>
+        <h2 style="margin-bottom:.25rem;"><%= profile.full_name || profile.email %></h2>
+        <span class="text-muted"><%= profile.email %></span>
+        <span style="margin-left:.5rem; font-size:.75rem; font-weight:600; padding:.15rem .45rem;
+                     border-radius:9999px; background:#e0e7ff; color:#4338ca;"><%= profile.role %></span>
+      </div>
+    </div>
+
+    <% if (profile.bio) { %>
+      <div style="margin-bottom:1.25rem;">
+        <p class="text-muted" style="margin-bottom:.35rem; font-size:.8rem; text-transform:uppercase; letter-spacing:.05em;">Bio</p>
+        <p style="color:#374151; line-height:1.6;"><%= profile.bio %></p>
+      </div>
+    <% } else { %>
+      <p class="text-muted" style="margin-bottom:1rem;">No bio added yet. <a href="/profile/edit" style="color:#6366f1;">Add one</a></p>
+    <% } %>
+
+    <p class="text-muted" style="font-size:.8rem;">
+      Member since <%= new Date(profile.created_at).toLocaleDateString('en-US', { dateStyle: 'medium' }) %>
+    </p>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

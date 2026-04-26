@@ -1,0 +1,47 @@
+<%- include('../partials/header', { user, title: 'Edit Profile' }) %>
+
+<div style="max-width:560px; margin:0 auto;">
+  <div class="flex items-center justify-between" style="margin-bottom:1.5rem;">
+    <h1 style="margin:0;">Edit Profile</h1>
+    <a href="/profile" class="btn btn-secondary btn-sm">← Back</a>
+  </div>
+
+  <% if (error) { %>
+    <div class="alert alert-error"><%= error %></div>
+  <% } %>
+
+  <div class="card">
+    <form method="POST" action="/profile/edit" enctype="multipart/form-data">
+
+      <div class="form-group">
+        <label for="full_name">Display Name <span style="color:#ef4444;">*</span></label>
+        <input type="text" id="full_name" name="full_name" maxlength="100" required
+               value="<%= profile.full_name || '' %>" />
+      </div>
+
+      <div class="form-group">
+        <label for="bio">Bio</label>
+        <textarea id="bio" name="bio" maxlength="500" rows="4"
+                  placeholder="Tell us a bit about yourself…"><%= profile.bio || '' %></textarea>
+        <p class="text-muted" style="margin-top:.25rem; font-size:.8rem;">Max 500 characters</p>
+      </div>
+
+      <div class="form-group">
+        <label for="profile_picture">Profile Picture</label>
+        <% if (profile.profile_picture) { %>
+          <div style="margin-bottom:.75rem;">
+            <img src="<%= profile.profile_picture %>" alt="Current profile picture"
+                 style="width:72px; height:72px; border-radius:50%; object-fit:cover; border:2px solid #e5e7eb;" />
+            <p class="text-muted" style="margin-top:.35rem; font-size:.8rem;">Current picture — upload a new one to replace it</p>
+          </div>
+        <% } %>
+        <input type="file" id="profile_picture" name="profile_picture" accept=".jpg,.jpeg,.png,.gif" />
+        <p class="text-muted" style="margin-top:.25rem; font-size:.8rem;">JPG, PNG, or GIF · Max 5 MB</p>
+      </div>
+
+      <button type="submit" class="btn btn-primary">Save Changes</button>
+    </form>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

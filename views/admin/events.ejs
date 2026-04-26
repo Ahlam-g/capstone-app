@@ -1,0 +1,62 @@
+<%- include('../partials/header', { user, title: 'Manage Events' }) %>
+
+<div class="flex items-center justify-between" style="margin-bottom:1.5rem;">
+  <h1 style="margin:0;">All Events (<%= events.length %>)</h1>
+  <a href="/admin" class="btn btn-secondary btn-sm">← Dashboard</a>
+</div>
+
+<% if (success) { %><div class="alert alert-success"><%= success %></div><% } %>
+
+<% if (events.length === 0) { %>
+  <div class="card" style="text-align:center; padding:2rem;">
+    <p class="text-muted">No events found.</p>
+  </div>
+<% } else { %>
+  <div class="card" style="padding:0; overflow:hidden;">
+    <table>
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Date</th>
+          <th>Venue</th>
+          <th>Creator</th>
+          <th>Total</th>
+          <th>Remaining</th>
+          <th>Price</th>
+          <th>Delete</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% events.forEach(event => { %>
+          <tr>
+            <td>
+              <a href="/events/<%= event.id %>" style="color:#6366f1; text-decoration:none;">
+                <%= event.title %>
+              </a>
+            </td>
+            <td><%= new Date(event.date).toLocaleDateString('en-US', { dateStyle: 'medium' }) %></td>
+            <td><%= event.venue %></td>
+            <td><%= event.creator_name %></td>
+            <td><%= event.total_tickets %></td>
+            <td>
+              <% if (event.tickets_remaining > 0) { %>
+                <span style="color:#166534;"><%= event.tickets_remaining %></span>
+              <% } else { %>
+                <span style="color:#b91c1c;">0 — Sold out</span>
+              <% } %>
+            </td>
+            <td>$<%= Number(event.price).toFixed(2) %></td>
+            <td>
+              <form method="POST" action="/admin/events/<%= event.id %>/delete"
+                    onsubmit="return confirm('Delete \'<%= event.title.replace(/'/g, '\\\'') %>\'?')">
+                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+<% } %>
+
+<%- include('../partials/footer') %>

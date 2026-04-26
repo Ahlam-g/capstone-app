@@ -1,0 +1,72 @@
+<%- include('../partials/header', { user, title: 'Ticket Details' }) %>
+
+<div class="flex items-center justify-between" style="margin-bottom:1.5rem;">
+  <h1 style="margin:0;">Ticket Details</h1>
+  <a href="/profile/tickets" class="btn btn-secondary btn-sm">← My Tickets</a>
+</div>
+
+<div class="card" style="max-width:560px;">
+
+  <!-- Status badge -->
+  <div style="margin-bottom:1.5rem;">
+    <% if (ticket.checked_in) { %>
+      <span style="font-size:.85rem; font-weight:600; padding:.3rem .75rem; border-radius:999px;
+        background:#eff6ff; color:#1d4ed8;">Checked In</span>
+    <% } else { %>
+      <span style="font-size:.85rem; font-weight:600; padding:.3rem .75rem; border-radius:999px;
+        background:<%= ticket.status === 'reserved' ? '#f0fdf4' : '#fef2f2' %>;
+        color:<%= ticket.status === 'reserved' ? '#166534' : '#b91c1c' %>;">
+        <%= ticket.status.charAt(0).toUpperCase() + ticket.status.slice(1) %>
+      </span>
+    <% } %>
+  </div>
+
+  <!-- Event details -->
+  <table style="width:100%; border-collapse:collapse; margin-bottom:1.5rem;">
+    <tr>
+      <td style="padding:.5rem 0; color:#6b7280; width:100px; vertical-align:top;">Event</td>
+      <td style="padding:.5rem 0; font-weight:600;"><%= ticket.event_title %></td>
+    </tr>
+    <tr>
+      <td style="padding:.5rem 0; color:#6b7280;">Date</td>
+      <td style="padding:.5rem 0;"><%= new Date(ticket.event_date).toLocaleString('en-US', { dateStyle: 'long', timeStyle: 'short' }) %></td>
+    </tr>
+    <tr>
+      <td style="padding:.5rem 0; color:#6b7280;">Venue</td>
+      <td style="padding:.5rem 0;"><%= ticket.event_venue || '—' %></td>
+    </tr>
+    <% if (ticket.checked_in && ticket.checked_in_at) { %>
+    <tr>
+      <td style="padding:.5rem 0; color:#6b7280;">Checked In</td>
+      <td style="padding:.5rem 0;"><%= new Date(ticket.checked_in_at).toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' }) %></td>
+    </tr>
+    <% } %>
+  </table>
+
+  <!-- Ticket code -->
+  <p style="font-size:.875rem; color:#6b7280; margin-bottom:.35rem;">Ticket Code</p>
+  <div style="font-family:monospace; background:#f3f4f6; border:1px solid #e5e7eb; border-radius:6px;
+              padding:.75rem 1rem; font-size:.9rem; word-break:break-all; margin-bottom:1.5rem;">
+    <%= ticket.ticket_code %>
+  </div>
+
+  <!-- QR code -->
+  <% if (ticket.qr_code_path) { %>
+    <p style="font-size:.875rem; color:#6b7280; margin-bottom:.5rem;">QR Code</p>
+    <div style="margin-bottom:1.5rem;">
+      <img src="<%= ticket.qr_code_path %>" alt="QR Code"
+           style="width:180px; height:180px; border:1px solid #e5e7eb; border-radius:8px; display:block;" />
+    </div>
+  <% } %>
+
+  <!-- Cancel button -->
+  <% if (ticket.status === 'reserved' && !ticket.checked_in) { %>
+    <form method="POST" action="/profile/tickets/<%= ticket.id %>/cancel"
+          onsubmit="return confirm('Cancel your ticket for <%= ticket.event_title.replace(/'/g, '\\\'') %>?')">
+      <button type="submit" class="btn btn-danger">Cancel Ticket</button>
+    </form>
+  <% } %>
+
+</div>
+
+<%- include('../partials/footer') %>

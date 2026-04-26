@@ -1,0 +1,80 @@
+<%- include('../partials/header', { user, title: event ? 'Edit Event' : 'New Event' }) %>
+
+<div style="max-width:640px; margin:0 auto;">
+  <a href="/manager" class="text-muted" style="display:inline-block; margin-bottom:1rem;">← Back to Dashboard</a>
+
+  <div class="card">
+    <h1 style="margin-bottom:1.5rem;"><%= event ? 'Edit Event' : 'Create New Event' %></h1>
+
+    <% if (error) { %>
+      <div class="alert alert-error"><%= error %></div>
+    <% } %>
+
+    <form
+      method="POST"
+      action="<%= event ? '/manager/events/' + event.id : '/manager/events' %>"
+      enctype="multipart/form-data"
+    >
+      <div class="form-group">
+        <label for="title">Event Title *</label>
+        <input type="text" id="title" name="title"
+               value="<%= event ? event.title : '' %>" required />
+      </div>
+
+      <div class="form-group">
+        <label for="description">Description</label>
+        <textarea id="description" name="description"><%= event ? (event.description || '') : '' %></textarea>
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+        <div class="form-group">
+          <label for="date">Date &amp; Time *</label>
+          <input type="datetime-local" id="date" name="date"
+                 value="<%= event ? event.date.slice(0, 16) : '' %>" required />
+        </div>
+
+        <div class="form-group">
+          <label for="venue">Venue *</label>
+          <input type="text" id="venue" name="venue"
+                 value="<%= event ? event.venue : '' %>" required />
+        </div>
+
+        <div class="form-group">
+          <label for="total_tickets">Total Tickets *</label>
+          <input type="number" id="total_tickets" name="total_tickets" min="1"
+                 value="<%= event ? event.total_tickets : '' %>" required />
+        </div>
+
+        <div class="form-group">
+          <label for="price">Price ($) *</label>
+          <input type="number" id="price" name="price" min="0" step="0.01"
+                 value="<%= event ? event.price : '' %>" required />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="image">Event Image (JPEG, PNG, GIF, WebP — max 5MB)</label>
+        <input type="file" id="image" name="image" accept="image/*" />
+        <% if (event && event.image_path) { %>
+          <div style="margin-top:.5rem;">
+            <p class="text-muted" style="margin-bottom:.35rem;">Current image:</p>
+            <img src="<%= event.image_path %>" alt="Current event image"
+                 style="max-height:100px; border-radius:4px; border:1px solid #e5e7eb;" />
+            <p class="text-muted" style="margin-top:.25rem; font-size:.8rem;">
+              Upload a new file to replace it.
+            </p>
+          </div>
+        <% } %>
+      </div>
+
+      <div class="flex gap-1" style="margin-top:.5rem;">
+        <button type="submit" class="btn btn-primary">
+          <%= event ? 'Save Changes' : 'Create Event' %>
+        </button>
+        <a href="/manager" class="btn btn-secondary">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>
